@@ -55,7 +55,24 @@ const {
 
 `addQueryParams` formats a route with query params
 
+`boomify` Returns a well formatted Boom error on HttpException
 
+`filterByUserId` Filter a query by userId.  Usefull to force this parameter when a user is logged in, for instance.
+
+#### Gigya
+
+`VerifyUser` Returns a promise resolving to the userId out of a gigya JWT,
+ or throws an error in case of a bad signature.
+ The token should live in the `request.headers['x-auth-token']`
+ You should have an ENV var called `GIGYA_DATACENTER` containing your gigya datacenter (ex: us.gigya.com)
+
+Example: 
+```
+return await verifyUser(request)
+	.then(uid => callApiResource(filterByUserId(request.query, uid)))
+	.catch(error => boomify(error))
+;
+```
 ## Contributing
 
 See CONTRIBUTING.md
