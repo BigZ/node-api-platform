@@ -25,6 +25,11 @@ const getJWTPublicKey = () =>
  */
 module.exports = request => {
   const token = request.headers['x-auth-token'];
+
+  if (!token) {
+    throw new HttpException('Unauthorized: no token found', 403);
+  }
+
   return getJWTPublicKey().then(apiKey => {
     const pem = getPem(apiKey.n, apiKey.e);
     const isValid = jws.verify(token, 'RS256', pem);
